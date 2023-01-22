@@ -12,7 +12,7 @@ The
 ---
 
 ## Quick start
-g
+
 ```gleam
 import gleam/io
 import hug
