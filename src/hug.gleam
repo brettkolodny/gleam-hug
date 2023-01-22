@@ -12,6 +12,12 @@ pub type Location {
   Location(row: Int, col: Int)
 }
 
+type Output {
+  Error
+  Warning
+  Info
+}
+
 // ----------------------------------------------------------------------------
 
 ///
@@ -23,14 +29,48 @@ pub fn error(
   error err: String,
   hint hint: String,
 ) -> String {
-  let error_header = construct_error_header(err)
+  output(file_name, source, start, end, err, hint, Error)
+}
 
-  let error_body = construct_error_body(file_name, source, start, end)
+pub fn warning(
+  in file_name: String,
+  containing source: String,
+  from start: Location,
+  to end: Location,
+  error err: String,
+  hint hint: String,
+) -> String {
+  output(file_name, source, start, end, err, hint, Warning)
+}
 
-  string.join([error_header, error_body, "", hint], "\n")
+pub fn info(
+  in file_name: String,
+  containing source: String,
+  from start: Location,
+  to end: Location,
+  error err: String,
+  hint hint: String,
+) -> String {
+  output(file_name, source, start, end, err, hint, Info)
 }
 
 // ----------------------------------------------------------------------------
+
+fn output(
+  file_name: String,
+  source: String,
+  start: Location,
+  end: Location,
+  err: String,
+  hint: String,
+  output: Output,
+) {
+  let error_header = construct_header(err, output)
+
+  let error_body = construct_error_body(file_name, source, start, end, output)
+
+  string.join([error_header, error_body, "", hint], "\n")
+}
 
 //
 fn relevant_lines(
@@ -53,7 +93,18 @@ fn relevant_lines(
 }
 
 //
-fn underline_errors(error_lines: List(String), start: Location) -> List(String) {
+fn underline_errors(
+  error_lines: List(String),
+  start: Location,
+  end: Location,
+  output: Output,
+) -> List(String) {
+  let colour = case output {
+    Error -> ansi.red
+    Warning -> ansi.yellow
+    Info -> ansi.blue
+  }
+
   use index, line <- list.index_map(error_lines)
 
   case string.trim(line) {
@@ -63,10 +114,12 @@ fn underline_errors(error_lines: List(String), start: Location) -> List(String) 
         True -> {
           let white_space = string.repeat(" ", start.col - 1)
 
-          white_space <> ansi.red(string.repeat(
-            "~",
-            string.length(line) - string.length(white_space),
-          ))
+          let underline_end = case end.row == start.row {
+            True -> end.col - start.col
+            False -> string.length(line) - string.length(white_space)
+          }
+
+          white_space <> colour(string.repeat("~", underline_end))
         }
 
         False -> {
@@ -77,14 +130,18 @@ fn underline_errors(error_lines: List(String), start: Location) -> List(String) 
 
           let white_space = string.repeat(" ", num_white_space)
 
-          white_space <> ansi.red(string.repeat("~", line_length_post_trim))
+          white_space <> colour(string.repeat("~", line_length_post_trim))
         }
       }
   }
 }
 
-fn construct_error_header(error_message: String) -> String {
-  ansi.red("error: ") <> error_message
+fn construct_header(message: String, output: Output) -> String {
+  case output {
+    Error -> ansi.red("error: ") <> message
+    Warning -> ansi.yellow("warning: ") <> message
+    Info -> ansi.blue("info: ") <> message
+  }
 }
 
 //
@@ -93,6 +150,7 @@ fn construct_error_body(
   source: String,
   start: Location,
   end: Location,
+  output: Output,
 ) -> String {
   let left_padding =
     int.max(
@@ -107,7 +165,7 @@ fn construct_error_body(
 
   let lines_with_errors = relevant_lines(source, start, end)
 
-  let underlines = underline_errors(lines_with_errors, start)
+  let underlines = underline_errors(lines_with_errors, start, end, output)
 
   let num_whitespace = white_space_to_remove(lines_with_errors)
 

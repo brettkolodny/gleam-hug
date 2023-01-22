@@ -62,3 +62,33 @@ pub fn multi_line_error_test() {
   )
   |> should.equal(output)
 }
+
+pub fn warning_test() {
+  assert Ok(source) = read_file(from: "./test/inputs/input_1.txt")
+  assert Ok(output) = read_file(from: "./test/outputs/output_5.txt")
+
+  source
+  |> hug.warning(
+    in: "input_1.txt",
+    from: Location(row: 2, col: 7),
+    to: Location(row: 2, col: 8),
+    error: "unused variable",
+    hint: "variable `a` is never referenced after assignment",
+  )
+  |> should.equal(output)
+}
+
+pub fn info_test() {
+  assert Ok(source) = read_file(from: "./test/inputs/input_1.txt")
+  assert Ok(output) = read_file(from: "./test/outputs/output_6.txt")
+
+  source
+  |> hug.info(
+    in: "input_1.txt",
+    from: Location(row: 2, col: 7),
+    to: Location(row: 2, col: 8),
+    error: "unused variable",
+    hint: "variable `a` is never referenced after assignment",
+  )
+  |> should.equal(output)
+}

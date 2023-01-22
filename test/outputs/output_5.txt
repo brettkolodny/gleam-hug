@@ -1,0 +1,8 @@
+[33mwarning: [39munused variable
+  ┌─ input_1.txt:2:7
+  │
+[32m2[39m │ let a = 3 + 4.0
+  │     [33m~[39m
+  │
+
+variable `a` is never referenced after assignment
