@@ -44,7 +44,7 @@ type Output {
   Info
 }
 
-// ----------------------------------------------------------------------------
+// OUTPUTS --------------------------------------------------------------------
 
 /// Returns a `String` displaying the provided error and relevant code.
 ///
