@@ -2,7 +2,7 @@ name = "hug"
 version = "0.1.0"
 licences = ["Apache-2.0"]
 description = "Helpful and pretty CLI messages"
-repository = { type = "github", user = "brettkolodny", rep = "gleam-hug" }
+repository = { type = "github", user = "brettkolodny", repo = "gleam-hug" }
 
 [javascript.deno]
 allow_read = ["./gleam.toml", "./test/"]
