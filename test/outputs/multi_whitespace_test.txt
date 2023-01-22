@@ -1,5 +1,5 @@
 [31merror: [39mwrong arity
-   ┌─ input_1.txt:10:9
+   ┌─ input.txt:10:9
    │
 [32m10[39m │ |> list.map()
    │ [31m~~~~~~~~~~~~~[39m

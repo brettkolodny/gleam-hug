@@ -1,5 +1,5 @@
 [34minfo: [39munused variable
-  ┌─ input_1.txt:2:7
+  ┌─ input.txt:2:7
   │
 [32m2[39m │ let a = 3 + 4.0
   │     [34m~[39m

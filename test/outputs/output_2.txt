@@ -1,8 +1,0 @@
-[31merror: [39mmismatched types
-  ┌─ input_1.txt:4:11
-  │
-[32m4[39m │ let b = [1, 2, "3", 4]
-  │         [31m~~~~~~~~~~~~~~[39m
-  │
-
-lists can only contain one type

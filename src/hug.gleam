@@ -26,10 +26,10 @@ pub fn error(
   containing source: String,
   from start: Location,
   to end: Location,
-  error err: String,
+  message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, err, hint, Error)
+  output(file_name, source, start, end, msg, hint, Error)
 }
 
 pub fn warning(
@@ -37,10 +37,10 @@ pub fn warning(
   containing source: String,
   from start: Location,
   to end: Location,
-  error err: String,
+  message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, err, hint, Warning)
+  output(file_name, source, start, end, msg, hint, Warning)
 }
 
 pub fn info(
@@ -48,10 +48,10 @@ pub fn info(
   containing source: String,
   from start: Location,
   to end: Location,
-  error err: String,
+  message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, err, hint, Info)
+  output(file_name, source, start, end, msg, hint, Info)
 }
 
 // ----------------------------------------------------------------------------
