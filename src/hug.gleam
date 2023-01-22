@@ -2,9 +2,9 @@
 
 import gleam/int
 import gleam/list
+import gleam/result
 import gleam/string
 import gleam_community/ansi
-import gleam/option.{None, Some}
 
 // TYPES ----------------------------------------------------------------------
 
@@ -65,36 +65,30 @@ fn output(
   hint: String,
   output: Output,
 ) {
-  let error_header = construct_header(err, output)
+  let header = construct_header(err, output)
 
-  let error_body = construct_error_body(file_name, source, start, end, output)
+  let body = construct_body(file_name, source, start, end, output)
 
-  string.join([error_header, error_body, "", hint], "\n")
+  string.join([header, body, "", hint], "\n")
 }
 
 //
-fn relevant_lines(
-  source: String,
+fn get_relevant_lines(
+  source_lines: List(String),
   start: Location,
   end: Location,
 ) -> List(String) {
-  source
-  |> string.split(on: "\n")
-  |> list.index_fold(
-    [],
-    fn(lines, line, index) {
-      case index + 1 >= start.row && index + 1 <= end.row {
-        True -> [line, ..lines]
-        False -> lines
-      }
-    },
-  )
-  |> list.reverse()
+  use lines, line, index <- list.index_fold(source_lines, [])
+
+  case index + 1 >= start.row && index + 1 <= end.row {
+    True -> list.append(lines, [line])
+    False -> lines
+  }
 }
 
 //
-fn underline_errors(
-  error_lines: List(String),
+fn underline_source(
+  source_lines: List(String),
   start: Location,
   end: Location,
   output: Output,
@@ -105,7 +99,7 @@ fn underline_errors(
     Info -> ansi.blue
   }
 
-  use index, line <- list.index_map(error_lines)
+  use index, line <- list.index_map(source_lines)
 
   case string.trim(line) {
     "" -> ""
@@ -145,7 +139,7 @@ fn construct_header(message: String, output: Output) -> String {
 }
 
 //
-fn construct_error_body(
+fn construct_body(
   file_name: String,
   source: String,
   start: Location,
@@ -163,19 +157,20 @@ fn construct_error_body(
       start.row,
     ) <> ":" <> int.to_string(start.col)
 
-  let lines_with_errors = relevant_lines(source, start, end)
+  let relevant_lines =
+    get_relevant_lines(string.split(source, on: "\n"), start, end)
 
-  let underlines = underline_errors(lines_with_errors, start, end, output)
+  let underlines = underline_source(relevant_lines, start, end, output)
 
-  let num_whitespace = white_space_to_remove(lines_with_errors)
+  let trim_left_amount = get_trim_left_amount(relevant_lines)
 
   let body =
-    list.zip(lines_with_errors, underlines)
+    list.zip(relevant_lines, underlines)
     |> list.index_map(fn(index, input) {
       construct_output_line(
         input,
         index + start.row,
-        num_whitespace,
+        trim_left_amount,
         left_padding,
       )
     })
@@ -196,63 +191,70 @@ fn construct_error_body(
 fn construct_output_line(
   input: #(String, String),
   row: Int,
-  white_space: Int,
+  trim_left_amount: Int,
   left_padding: Int,
 ) -> String {
-  let #(error_line, underline) = input
+  let #(source_line, underline) = input
 
   let line_number_padding = left_padding - string.length(int.to_string(row)) + 1
 
-  let error_line =
-    ansi.green(int.to_string(row)) <> string.repeat(" ", line_number_padding) <> " │ " <> trim_left_by(
-      error_line,
-      white_space,
+  let source_line =
+    ansi.green(int.to_string(row)) <> string.repeat(" ", line_number_padding) <> " │ " <> trim_left(
+      source_line,
+      by: trim_left_amount,
     )
 
   case string.length(underline) {
-    0 -> error_line
+    0 -> source_line
     _ -> {
       let underline_line =
-        string.repeat(" ", left_padding) <> "  │ " <> trim_left_by(
+        string.repeat(" ", left_padding) <> "  │ " <> trim_left(
           underline,
-          white_space,
+          by: trim_left_amount,
         )
 
-      string.join([error_line, underline_line], "\n")
+      string.join([source_line, underline_line], "\n")
     }
   }
 }
 
 //
-fn white_space_to_remove(lines: List(String)) -> Int {
-  lines
-  |> list.fold(
-    None,
-    fn(acc, line) {
-      case string.trim(line) {
-        "" -> acc
-        _ -> {
-          let white_space =
-            string.length(line) - {
-              line
-              |> string.trim_left()
-              |> string.length()
-            }
+fn get_trim_left_amount(lines: List(String)) -> Int {
+  let get_left_white_space = fn(line) {
+    string.length(line) - {
+      line
+      |> string.trim_left()
+      |> string.length()
+    }
+  }
 
-          case acc {
-            Some(count) -> Some(int.min(count, white_space))
-            None -> Some(white_space)
-          }
-        }
-      }
-    },
+  let first_line =
+    list.first(lines)
+    |> result.unwrap("")
+
+  use min_white_space, line <- list.fold(
+    lines,
+    get_left_white_space(first_line),
   )
-  |> option.unwrap(0)
+
+  case string.trim(line) {
+    "" -> min_white_space
+    _ -> {
+      let white_space =
+        string.length(line) - {
+          line
+          |> string.trim_left()
+          |> string.length()
+        }
+
+      int.min(min_white_space, white_space)
+    }
+  }
 }
 
 //
-fn trim_left_by(str: String, num_whitespace: Int) -> String {
+fn trim_left(str: String, by num_white_space: Int) -> String {
   let string_length = string.length(str)
 
-  string.slice(from: str, at_index: num_whitespace, length: string_length)
+  string.slice(from: str, at_index: num_white_space, length: string_length)
 }
