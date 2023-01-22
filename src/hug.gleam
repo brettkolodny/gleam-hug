@@ -1,3 +1,29 @@
+//// 
+//// - **Outputs**
+////   - [`error`](#error)
+////   - [`warning`](#error)
+////   - [`info`](#info)
+////
+//// ---
+////
+//// <details>
+//// <summary>The license of that package is produced below:</summary>
+//// 
+//// 
+//// > MIT License
+////
+//// > Permission is hereby granted, free of charge, to any person obtaining a copy
+//// of this software and associated documentation files (the "Software"), to deal
+//// in the Software without restriction, including without limitation the rights
+//// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//// copies of the Software, and to permit persons to whom the Software is
+//// furnished to do so, subject to the following conditions:
+////
+//// > The above copyright notice and this permission notice shall be included in all
+//// copies or substantial portions of the Software.
+//// </details>
+////
+
 // IMPORTS --------------------------------------------------------------------
 
 import gleam/int
@@ -20,6 +46,37 @@ type Output {
 
 // ----------------------------------------------------------------------------
 
+/// Returns a `String` displaying the provided error and relevant code.
+///
+///
+/// <details>
+/// <summary>Example:</summary>
+///
+/// ```gleam
+/// fn example() {
+///   let source = "let five = 4 + 1.0"
+///   
+///   source
+///   |> hug.error(
+///     in: "example.gleam",
+///     from: #(1, 11),
+///     to: #(1, 18),
+///     message: "invalid type",
+///     hint: "can not add an `Int` to a `Float`"
+///   )
+///   |> io.println()
+/// }
+/// ```
+/// </details>
+///
+/// <div style="position: relative;">
+///     <a style="position: absolute; left: 0;" href="https://github.com/brettkolodny/hug/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+///     <a style="position: absolute; right: 0;" href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
 ///
 pub fn error(
   in file_name: String,
@@ -32,6 +89,38 @@ pub fn error(
   output(file_name, source, start, end, msg, hint, Error)
 }
 
+/// Returns a `String` displaying the provided warning and relevant code.
+///
+///
+/// <details>
+/// <summary>Example:</summary>
+///
+/// ```gleam
+/// fn example() {
+///   let source = "let five = 4 + 1.0"
+///   
+///   source
+///   |> hug.warn(
+///     in: "example.gleam",
+///     from: #(1, 5),
+///     to: #(1, 9),
+///     message: "unused variable",
+///     hint: "the variable `five` is declared but never used"
+///   )
+///   |> io.println()
+/// }
+/// ```
+/// </details>
+///
+/// <div style="position: relative;">
+///     <a style="position: absolute; left: 0;" href="https://github.com/brettkolodny/hug/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+///     <a style="position: absolute; right: 0;" href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
 pub fn warning(
   in file_name: String,
   containing source: String,
@@ -43,6 +132,38 @@ pub fn warning(
   output(file_name, source, start, end, msg, hint, Warning)
 }
 
+/// Returns a `String` displaying the provided info and relevant code.
+///
+///
+/// <details>
+/// <summary>Example:</summary>
+///
+/// ```gleam
+/// fn example() {
+///   let source = "try five = int.parse("4") |> result.then(fn(v) { v + 1})"
+///   
+///   source
+///   |> hug.info(
+///     in: "example.gleam",
+///     from: #(1, 1),
+///     to: #(1, 4),
+///     message: "use of deprecated code",
+///     hint: "`try` is marked as deprecated, check out `use`!"
+///   )
+///   |> io.println()
+/// }
+/// ```
+/// </details>
+///
+/// <div style="position: relative;">
+///     <a style="position: absolute; left: 0;" href="https://github.com/brettkolodny/hug/issues">
+///         <small>Spot a typo? Open an issue!</small>
+///     </a>
+///     <a style="position: absolute; right: 0;" href="#">
+///         <small>Back to top ↑</small>
+///     </a>
+/// </div>
+///
 pub fn info(
   in file_name: String,
   containing source: String,
