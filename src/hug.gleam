@@ -34,7 +34,7 @@ import gleam_community/ansi
 
 // TYPES ----------------------------------------------------------------------
 
-pub type Location {
+type Location {
   Location(row: Int, col: Int)
 }
 
@@ -81,12 +81,20 @@ type Output {
 pub fn error(
   in file_name: String,
   containing source: String,
-  from start: Location,
-  to end: Location,
+  from start: #(Int, Int),
+  to end: #(Int, Int),
   message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, msg, hint, Error)
+  output(
+    file_name,
+    source,
+    Location(row: start.0, col: start.1),
+    Location(row: end.0, col: end.1),
+    msg,
+    hint,
+    Error,
+  )
 }
 
 /// Returns a `String` displaying the provided warning and relevant code.
@@ -100,7 +108,7 @@ pub fn error(
 ///   let source = "let five = 4 + 1.0"
 ///   
 ///   source
-///   |> hug.warn(
+///   |> hug.warning(
 ///     in: "example.gleam",
 ///     from: #(1, 5),
 ///     to: #(1, 9),
@@ -124,12 +132,20 @@ pub fn error(
 pub fn warning(
   in file_name: String,
   containing source: String,
-  from start: Location,
-  to end: Location,
+  from start: #(Int, Int),
+  to end: #(Int, Int),
   message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, msg, hint, Warning)
+  output(
+    file_name,
+    source,
+    Location(row: start.0, col: start.1),
+    Location(row: end.0, col: end.1),
+    msg,
+    hint,
+    Warning,
+  )
 }
 
 /// Returns a `String` displaying the provided info and relevant code.
@@ -167,12 +183,20 @@ pub fn warning(
 pub fn info(
   in file_name: String,
   containing source: String,
-  from start: Location,
-  to end: Location,
+  from start: #(Int, Int),
+  to end: #(Int, Int),
   message msg: String,
   hint hint: String,
 ) -> String {
-  output(file_name, source, start, end, msg, hint, Info)
+  output(
+    file_name,
+    source,
+    Location(row: start.0, col: start.1),
+    Location(row: end.0, col: end.1),
+    msg,
+    hint,
+    Info,
+  )
 }
 
 // ----------------------------------------------------------------------------

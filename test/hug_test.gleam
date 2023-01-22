@@ -1,7 +1,7 @@
 import gleeunit
 import gleeunit/should
 import read_file.{read_file}
-import hug.{Location}
+import hug
 
 pub fn main() {
   gleeunit.main()
@@ -14,8 +14,8 @@ pub fn two_whitespace_test() {
   source
   |> hug.error(
     in: "input.txt",
-    from: Location(row: 2, col: 11),
-    to: Location(row: 2, col: 18),
+    from: #(2, 11),
+    to: #(2, 18),
     message: "mismatched types",
     hint: "expected type `Int` got type `Float`",
   )
@@ -30,8 +30,8 @@ pub fn multi_whitespace_test() {
   source
   |> hug.error(
     in: "input.txt",
-    from: Location(row: 10, col: 9),
-    to: Location(row: 10, col: 22),
+    from: #(10, 9),
+    to: #(10, 22),
     message: "wrong arity",
     hint: "list.map expects two arguments but only received one",
   )
@@ -45,8 +45,8 @@ pub fn multi_line_test() {
   source
   |> hug.error(
     in: "input.txt",
-    from: Location(row: 9, col: 9),
-    to: Location(row: 12, col: 21),
+    from: #(9, 9),
+    to: #(12, 21),
     message: "very bad code",
     hint: "you really done mucked this one up",
   )
@@ -60,8 +60,8 @@ pub fn warning_test() {
   source
   |> hug.warning(
     in: "input.txt",
-    from: Location(row: 2, col: 7),
-    to: Location(row: 2, col: 8),
+    from: #(2, 7),
+    to: #(2, 8),
     message: "unused variable",
     hint: "variable `a` is never referenced after assignment",
   )
@@ -75,8 +75,8 @@ pub fn info_test() {
   source
   |> hug.info(
     in: "input.txt",
-    from: Location(row: 2, col: 7),
-    to: Location(row: 2, col: 8),
+    from: #(2, 7),
+    to: #(2, 8),
     message: "unused variable",
     hint: "variable `a` is never referenced after assignment",
   )

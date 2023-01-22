@@ -12,7 +12,7 @@ The
 ---
 
 ## Quick start
-
+g
 ```gleam
 import gleam/io
 import hug
@@ -44,6 +44,6 @@ gleam add hug
 and its documentation can be found at <https://hexdocs.pm/hug>.
 
 
-## Why Hug?
+## Why `hug`?
 
 The name `hug` is inspired by Mark Rendle's talk [The Worst Programming Language Ever](https://youtu.be/vcFBwt1nu2U?t=2229) where he refers error messages in Rust as "a hug from the compiler".
