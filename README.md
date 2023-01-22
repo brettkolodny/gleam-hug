@@ -2,8 +2,6 @@
 
 A package for creating helpful, and pretty CLI messages.
 
-The
-
 [![Package Version](https://img.shields.io/hexpm/v/hug)](https://hex.pm/packages/hug)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/hug/)
 
