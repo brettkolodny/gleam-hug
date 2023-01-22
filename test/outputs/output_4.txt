@@ -1,0 +1,14 @@
+[31merror: [39mvery bad code
+   ┌─ input_1.txt:9:9
+   │
+[32m9[39m  │ b
+   │ [31m~[39m
+[32m10[39m │ |> list.map()
+   │ [31m~~~~~~~~~~~~~[39m
+[32m11[39m │ |> list.flat_map()
+   │ [31m~~~~~~~~~~~~~~~~~~[39m
+[32m12[39m │ |> int.sum()
+   │ [31m~~~~~~~~~~~~[39m
+   │
+
+you really done mucked this one up

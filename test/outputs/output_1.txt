@@ -1,0 +1,8 @@
+[31merror: [39mmismatched types
+  ┌─ input_1.txt:2:11
+  │
+[32m2[39m │ let a = 3 + 4.0
+  │         [31m~~~~~~~[39m
+  │
+
+expected type `Int` got type `Float`

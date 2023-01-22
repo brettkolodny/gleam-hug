@@ -1,0 +1,15 @@
+pub fn foo() {
+  let a = 3 + 4.0
+
+  let b = [1, 2, "3", 4]
+
+  let c = {
+    let d = {
+      let e =
+        b
+        |> list.map()
+        |> list.flat_map()
+        |> int.sum()
+    }
+  }
+}
