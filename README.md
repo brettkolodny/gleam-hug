@@ -7,6 +7,18 @@ A package for creating helpful, and pretty CLI messages.
 
 ✨ This project is written in pure Gleam so you can use it anywhere Gleam runs: Erlang, Elixir, Node, Deno, and the browser!
 
+<pre>
+<span style="color:red;">error</span>: mismatched types 
+  ┌─ example.gleam:2:3 
+  │    
+  │ let a = 
+2 │   1 + "hello" 
+  │   ~~~~~~~~~~~ 
+  │ 
+  
+expected type `Num` got type `Str`
+</pre>
+
 ---
 
 ## Quick start
