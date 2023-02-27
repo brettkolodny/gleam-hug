@@ -38,7 +38,7 @@ pub fn main() {
      message: "invalid type",
      hint: "can not add an `Int` to a `Float`"
    )
-   |> io.println()
+   |> io.println_error()
   )
 }
 ```
