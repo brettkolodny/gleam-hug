@@ -9,7 +9,8 @@ pub fn main() {
 
 pub fn two_whitespace_test() {
   let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  let assert Ok(output) = read_file(from: "./test/outputs/two_whitespace_test.txt")
+  let assert Ok(output) =
+    read_file(from: "./test/outputs/two_whitespace_test.txt")
 
   source
   |> hug.error(
