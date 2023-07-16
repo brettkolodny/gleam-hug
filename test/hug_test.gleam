@@ -8,8 +8,8 @@ pub fn main() {
 }
 
 pub fn two_whitespace_test() {
-  assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  assert Ok(output) = read_file(from: "./test/outputs/two_whitespace_test.txt")
+  let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
+  let assert Ok(output) = read_file(from: "./test/outputs/two_whitespace_test.txt")
 
   source
   |> hug.error(
@@ -23,8 +23,8 @@ pub fn two_whitespace_test() {
 }
 
 pub fn multi_whitespace_test() {
-  assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  assert Ok(output) =
+  let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
+  let assert Ok(output) =
     read_file(from: "./test/outputs/multi_whitespace_test.txt")
 
   source
@@ -39,8 +39,8 @@ pub fn multi_whitespace_test() {
 }
 
 pub fn multi_line_test() {
-  assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  assert Ok(output) = read_file(from: "./test/outputs/multi_line_test.txt")
+  let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
+  let assert Ok(output) = read_file(from: "./test/outputs/multi_line_test.txt")
 
   source
   |> hug.error(
@@ -54,8 +54,8 @@ pub fn multi_line_test() {
 }
 
 pub fn warning_test() {
-  assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  assert Ok(output) = read_file(from: "./test/outputs/warning_test.txt")
+  let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
+  let assert Ok(output) = read_file(from: "./test/outputs/warning_test.txt")
 
   source
   |> hug.warning(
@@ -69,8 +69,8 @@ pub fn warning_test() {
 }
 
 pub fn info_test() {
-  assert Ok(source) = read_file(from: "./test/inputs/input.txt")
-  assert Ok(output) = read_file(from: "./test/outputs/info_test.txt")
+  let assert Ok(source) = read_file(from: "./test/inputs/input.txt")
+  let assert Ok(output) = read_file(from: "./test/outputs/info_test.txt")
 
   source
   |> hug.info(
