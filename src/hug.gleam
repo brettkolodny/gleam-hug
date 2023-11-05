@@ -246,11 +246,13 @@ fn underline_source(
 
   use index, line <- list.index_map(source_lines)
 
+  let list_length = list.length(source_lines) - 1
+
   case string.trim(line) {
     "" -> ""
     _ ->
-      case index == 0 {
-        True -> {
+      case index {
+        i if i == 0 -> {
           let white_space = string.repeat(" ", start.col - 1)
 
           let underline_end = case end.row == start.row {
@@ -261,7 +263,21 @@ fn underline_source(
           white_space <> colour(string.repeat("~", underline_end))
         }
 
-        False -> {
+        i if i == list_length -> {
+          let line_length = string.length(line)
+          let line_length_post_trim = string.length(string.trim_left(line))
+
+          let num_white_space = line_length - line_length_post_trim
+
+          let white_space = string.repeat(" ", num_white_space)
+
+          white_space <> colour(string.repeat(
+            "~",
+            end.col - num_white_space - 1,
+          ))
+        }
+
+        _ -> {
           let line_length = string.length(line)
           let line_length_post_trim = string.length(string.trim_left(line))
 

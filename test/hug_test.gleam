@@ -83,3 +83,18 @@ pub fn info_test() {
   )
   |> should.equal(output)
 }
+
+pub fn two_line_error_test() {
+  let assert Ok(source) = read_file(from: "./test/inputs/two_line_input.txt")
+  let assert Ok(output) = read_file(from: "./test/outputs/two_line_test.txt")
+
+  source
+  |> hug.error(
+    in: "test",
+    from: #(1, 5),
+    to: #(2, 23),
+    message: "invalid syntax",
+    hint: "blah",
+  )
+  |> should.equal(output)
+}
