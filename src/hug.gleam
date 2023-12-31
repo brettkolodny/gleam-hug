@@ -30,6 +30,7 @@ import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
+import gleam/option as o
 import gleam_community/ansi
 
 // TYPES ----------------------------------------------------------------------
@@ -43,6 +44,38 @@ type Output {
   Warning
   Info
 }
+
+pub opaque type HugBuilder {
+  HugBuilder(
+    file_name: o.Option(String),
+    source: o.Option(String),
+    start: o.Option(Location),
+    end: o.Option(Location),
+    message: o.Option(String),
+    hint: o.Option(String),
+  )
+}
+
+// pub type Options {
+//   Options 
+// }
+
+// CONSTRUCTOR ----------------------------------------------------------------
+
+// pub fn new() -> HugBuilder {
+//   HugBuilder(
+//     file_name: o.None,
+//     source: o.None,
+//     start: o.None,
+//     end: o.None,
+//     message: o.None,
+//     hint: o.None,
+//   )
+// }
+
+// pub fn with_file_name(builder: HugBuilder, file_name: String) -> HugBuilder {
+
+// }
 
 // OUTPUTS --------------------------------------------------------------------
 
@@ -244,7 +277,7 @@ fn underline_source(
     Info -> ansi.blue
   }
 
-  use index, line <- list.index_map(source_lines)
+  use line, index <- list.index_map(source_lines)
 
   let list_length = list.length(source_lines) - 1
 
@@ -271,10 +304,8 @@ fn underline_source(
 
           let white_space = string.repeat(" ", num_white_space)
 
-          white_space <> colour(string.repeat(
-            "~",
-            end.col - num_white_space - 1,
-          ))
+          white_space
+          <> colour(string.repeat("~", end.col - num_white_space - 1))
         }
 
         _ -> {
@@ -311,12 +342,17 @@ fn construct_body(
     int.max(
       string.length(int.to_string(start.row)),
       string.length(int.to_string(end.row)),
-    ) - 1
+    )
+    - 1
 
   let body_start =
-    string.repeat(" ", left_padding) <> "  ┌─ " <> file_name <> ":" <> int.to_string(
-      start.row,
-    ) <> ":" <> int.to_string(start.col)
+    string.repeat(" ", left_padding)
+    <> "  ┌─ "
+    <> file_name
+    <> ":"
+    <> int.to_string(start.row)
+    <> ":"
+    <> int.to_string(start.col)
 
   let relevant_lines =
     get_relevant_lines(string.split(source, on: "\n"), start, end)
@@ -327,10 +363,11 @@ fn construct_body(
 
   let body =
     list.zip(relevant_lines, underlines)
-    |> list.index_map(fn(index, input) {
+    |> list.index_map(fn(input, index) {
       construct_output_line(
         input,
-        index + start.row,
+        index
+        + start.row,
         trim_left_amount,
         left_padding,
       )
@@ -340,9 +377,11 @@ fn construct_body(
   string.join(
     [
       body_start,
-      string.repeat(" ", left_padding) <> "  │",
+      string.repeat(" ", left_padding)
+      <> "  │",
       body,
-      string.repeat(" ", left_padding) <> "  │",
+      string.repeat(" ", left_padding)
+      <> "  │",
     ],
     "\n",
   )
@@ -360,19 +399,18 @@ fn construct_output_line(
   let line_number_padding = left_padding - string.length(int.to_string(row)) + 1
 
   let source_line =
-    ansi.green(int.to_string(row)) <> string.repeat(" ", line_number_padding) <> " │ " <> trim_left(
-      source_line,
-      by: trim_left_amount,
-    )
+    ansi.green(int.to_string(row))
+    <> string.repeat(" ", line_number_padding)
+    <> " │ "
+    <> trim_left(source_line, by: trim_left_amount)
 
   case string.length(underline) {
     0 -> source_line
     _ -> {
       let underline_line =
-        string.repeat(" ", left_padding) <> "  │ " <> trim_left(
-          underline,
-          by: trim_left_amount,
-        )
+        string.repeat(" ", left_padding)
+        <> "  │ "
+        <> trim_left(underline, by: trim_left_amount)
 
       string.join([source_line, underline_line], "\n")
     }
@@ -382,7 +420,8 @@ fn construct_output_line(
 //
 fn get_trim_left_amount(lines: List(String)) -> Int {
   let get_left_white_space = fn(line) {
-    string.length(line) - {
+    string.length(line)
+    - {
       line
       |> string.trim_left()
       |> string.length()
@@ -393,16 +432,15 @@ fn get_trim_left_amount(lines: List(String)) -> Int {
     list.first(lines)
     |> result.unwrap("")
 
-  use min_white_space, line <- list.fold(
-    lines,
-    get_left_white_space(first_line),
+  use min_white_space, line <- list.fold(lines, get_left_white_space(first_line),
   )
 
   case string.trim(line) {
     "" -> min_white_space
     _ -> {
       let white_space =
-        string.length(line) - {
+        string.length(line)
+        - {
           line
           |> string.trim_left()
           |> string.length()
