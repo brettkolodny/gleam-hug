@@ -1,5 +1,5 @@
 name = "hug"
-version = "1.0"
+version = "1.0.0"
 licences = ["Apache-2.0"]
 description = "Helpful and pretty CLI messages"
 repository = { type = "github", user = "brettkolodny", repo = "gleam-hug" }
