@@ -1,4 +1,3 @@
-//// 
 //// - **Outputs**
 ////   - [`error`](#error)
 ////   - [`warning`](#error)
@@ -8,8 +7,7 @@
 ////
 //// <details>
 //// <summary>The license of that package is produced below:</summary>
-//// 
-//// 
+////
 //// > MIT License
 ////
 //// > Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,7 +28,6 @@ import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
-import gleam/option as o
 import gleam_community/ansi
 
 // TYPES ----------------------------------------------------------------------
@@ -45,36 +42,6 @@ type Output {
   Info
 }
 
-pub opaque type HugBuilder {
-  HugBuilder(
-    file_name: o.Option(String),
-    source: o.Option(String),
-    start: o.Option(Location),
-    end: o.Option(Location),
-    message: o.Option(String),
-    hint: o.Option(String),
-  )
-}
-
-// pub type Options {
-//   Options 
-// }
-
-// CONSTRUCTOR ----------------------------------------------------------------
-
-// pub fn new() -> HugBuilder {
-//   HugBuilder(
-//     file_name: o.None,
-//     source: o.None,
-//     start: o.None,
-//     end: o.None,
-//     message: o.None,
-//     hint: o.None,
-//   )
-// }
-
-// pub fn with_file_name(builder: HugBuilder, file_name: String) -> HugBuilder {
-
 // }
 
 // OUTPUTS --------------------------------------------------------------------
@@ -88,7 +55,7 @@ pub opaque type HugBuilder {
 /// ```gleam
 /// fn example() {
 ///   let source = "let five = 4 + 1.0"
-///   
+///
 ///   source
 ///   |> hug.error(
 ///     in: "example.gleam",
@@ -132,14 +99,13 @@ pub fn error(
 
 /// Returns a `String` displaying the provided warning and relevant code.
 ///
-///
 /// <details>
 /// <summary>Example:</summary>
 ///
 /// ```gleam
 /// fn example() {
 ///   let source = "let five = 4 + 1.0"
-///   
+///
 ///   source
 ///   |> hug.warning(
 ///     in: "example.gleam",
@@ -183,14 +149,13 @@ pub fn warning(
 
 /// Returns a `String` displaying the provided info and relevant code.
 ///
-///
 /// <details>
 /// <summary>Example:</summary>
 ///
 /// ```gleam
 /// fn example() {
 ///   let source = "try five = int.parse("4") |> result.then(fn(v) { v + 1})"
-///   
+///
 ///   source
 ///   |> hug.info(
 ///     in: "example.gleam",
@@ -250,7 +215,6 @@ fn output(
   string.join([header, body, "", hint], "\n")
 }
 
-//
 fn get_relevant_lines(
   source_lines: List(String),
   start: Location,
@@ -264,7 +228,6 @@ fn get_relevant_lines(
   }
 }
 
-//
 fn underline_source(
   source_lines: List(String),
   start: Location,
@@ -330,7 +293,6 @@ fn construct_header(message: String, output: Output) -> String {
   }
 }
 
-//
 fn construct_body(
   file_name: String,
   source: String,
@@ -366,8 +328,7 @@ fn construct_body(
     |> list.index_map(fn(input, index) {
       construct_output_line(
         input,
-        index
-        + start.row,
+        index + start.row,
         trim_left_amount,
         left_padding,
       )
@@ -377,17 +338,14 @@ fn construct_body(
   string.join(
     [
       body_start,
-      string.repeat(" ", left_padding)
-      <> "  │",
+      string.repeat(" ", left_padding) <> "  │",
       body,
-      string.repeat(" ", left_padding)
-      <> "  │",
+      string.repeat(" ", left_padding) <> "  │",
     ],
     "\n",
   )
 }
 
-//
 fn construct_output_line(
   input: #(String, String),
   row: Int,
@@ -417,7 +375,6 @@ fn construct_output_line(
   }
 }
 
-//
 fn get_trim_left_amount(lines: List(String)) -> Int {
   let get_left_white_space = fn(line) {
     string.length(line)
@@ -432,7 +389,9 @@ fn get_trim_left_amount(lines: List(String)) -> Int {
     list.first(lines)
     |> result.unwrap("")
 
-  use min_white_space, line <- list.fold(lines, get_left_white_space(first_line),
+  use min_white_space, line <- list.fold(
+    lines,
+    get_left_white_space(first_line),
   )
 
   case string.trim(line) {
@@ -451,7 +410,6 @@ fn get_trim_left_amount(lines: List(String)) -> Int {
   }
 }
 
-//
 fn trim_left(str: String, by num_white_space: Int) -> String {
   let string_length = string.length(str)
 
