@@ -26,6 +26,7 @@
 
 import gleam/int
 import gleam/list
+import gleam/option as o
 import gleam/result
 import gleam/string
 import gleam_community/ansi
