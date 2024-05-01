@@ -1,7 +1,7 @@
 import gleeunit
 import gleeunit/should
-import read_file.{read_file}
 import hug
+import read_file.{read_file}
 
 pub fn main() {
   gleeunit.main()
